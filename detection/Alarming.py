@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-#/home/pi/workspace/alarm_system/
 
 from RPi import GPIO
 import time
@@ -28,23 +27,23 @@ else:
     #Lese Konfigurationen
     config = configparser.ConfigParser()
     config.sections()
-    config.read('alarm_system.cfg')
+    config.read('../alarming.conf')
     config.sections()
     
-    detection_time = config['alarm configuration'].getfloat('detection_time') #Verzögerung nach letzter Bewegung, bis Aufzeichnung beendet ist
-    alarm_send_delay = config['alarm configuration'].getfloat('alarm_send_delay') #Verzögerung bis einen Alarm versendet wird (Zeit Muss kleiner sein als detection Time)
-    capture_dir = config['alarm configuration']['capture_dir']#Ordner wo die Bilder und Videos gespeichert werden
-    save_videos = config['alarm configuration'].getboolean('save_videos') #True Falls die Vidoes der Aufnahmen gespeichert werden sollen
+    detection_time = config['detection'].getfloat('detection_time') #Verzögerung nach letzter Bewegung, bis Aufzeichnung beendet ist
+    alarm_send_delay = config['detection'].getfloat('alarm_send_delay') #Verzögerung bis einen Alarm versendet wird (Zeit Muss kleiner sein als detection Time)
+    capture_dir = config['detection']['capture_dir']#Ordner wo die Bilder und Videos gespeichert werden
+    save_videos = config['detection'].getboolean('save_videos') #True Falls die Vidoes der Aufnahmen gespeichert werden sollen
 
-    server = config['E-Mail configuration']['server']
-    port = config['E-Mail configuration'].getint('port')
-    useTLS = config['E-Mail configuration'].getboolean('useTLS')
-    username = config['E-Mail configuration']['username']
-    password = config['E-Mail configuration']['password']
-    send_from = config['E-Mail configuration']['send_from']
-    send_to = config['E-Mail configuration']['send_to']
-    subject = config['E-Mail configuration']['subject']
-    max_pictures = config['E-Mail configuration'].getint('max_pictures')
+    server = config['E-Mail']['server']
+    port = config['E-Mail'].getint('port')
+    useTLS = config['E-Mail'].getboolean('useTLS')
+    username = config['E-Mail']['username']
+    password = config['E-Mail']['password']
+    send_from = config['E-Mail']['send_from']
+    send_to = config['E-Mail']['send_to']
+    subject = config['E-Mail']['subject']
+    max_pictures = config['E-Mail'].getint('max_pictures')
     text = "Hallo \nUm "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+" wurde eine Bewegung erkannt. Die Aufnahmen sind im Anhang zu finden. \nGrüsse Pi Überwachungskamera"
     
     
