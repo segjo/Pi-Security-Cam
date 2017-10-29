@@ -1,6 +1,6 @@
 # Untracked files:
 alarming.conf
-/__pycache__/
+*/__pycache__/
 *.lock
 *.lock
 *.log
