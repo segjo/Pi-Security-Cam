@@ -26,10 +26,12 @@ def send_mail( send_from, send_to, subject, text, filesdir,max_pictures ,server=
                 msg.attach(part)
                 picture_counter=picture_counter+1
 
-    smtp = smtplib.SMTP(server, port)
-    if isTls: smtp.starttls()
-    smtp.login(username,password)
-    smtp.sendmail(send_from, send_to, msg.as_string())
-    smtp.quit()
-    
-    
+    try:
+        smtp = smtplib.SMTP(server, port)
+        if isTls: smtp.starttls()
+        smtp.login(username,password)
+        smtp.sendmail(send_from, send_to, msg.as_string())
+        smtp.quit()
+    except:
+        return False
+    return True
