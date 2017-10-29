@@ -8,7 +8,7 @@ import datetime
 import os
 import configparser
 import logging
-
+import dbm
 import StateManager
 import KeyCodeController
 import LedController
@@ -48,7 +48,16 @@ import LedController
 logging.basicConfig(filename='../logs/controller.log', level=logging.DEBUG)
 logging.info("-------Controller starts--------") 
 
-
+def getState(state):
+    with dbm.open('../state', 'r') as db:
+        if state == 'controller':
+            return db.get('controller_state')
+    
+def setState(state, value):
+    with dbm.open('../state', 'c') as db:
+        if state == 'controller':
+           db['controller_state'] = value 
+           
 #  
 #  Konfiguration einlesen
 #
@@ -67,16 +76,15 @@ except Exception as e:
 
 
 
-StateManager.setState(StateManager.READY)
+
+setState("controller", "READY")
 
 while True:
     print("WaitOnCode")
     KeyCodeController.waitOnCode(key_code, 0);     # auf (richtigen) TastenCode  warten
 
-    state = StateManager.getState()
-    print("State: " + state)
     
-    if (state == b'READY'):
+    if getState('controller') == b'READY':
         print ("im READY")
         ###LedController.setLEDs(LedController.GREEN, LedController.BLUE_BLINKING);
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.BLINK)
@@ -96,3 +104,7 @@ while True:
         
         LedController.setLEDs_RedGreenBlue(off, on, off)
         StateManger.setState(StateMagager.READY)
+        
+        
+        
+

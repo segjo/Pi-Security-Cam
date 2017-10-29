@@ -18,15 +18,15 @@ import dbm
 
 
 
-READY = b'READY' 
-ACTIV = b'ACTIV'
-ALARM = b'ALARM'
+READY = 'READY' 
+ACTIV = 'ACTIV'
+ALARM = 'ALARM'
 
 #!/usr/bin/python
 #
 def setState(state):
     print("StateManager.setState: " + state.__str__())
-    db = dbm.open('state.db', 'c')
+    db = dbm.open('state', 'c')
     db['state'] = state
     db.close
     
