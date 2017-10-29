@@ -1,7 +1,7 @@
 # Untracked files:
-alarming.conf
-detection/__pycache__
-detection/alarming.lock
-detection/detection.lock
-log/*
-state.db
+*.conf
+/__pycache__/
+*.lock
+*.lock
+*.log
+*.db
