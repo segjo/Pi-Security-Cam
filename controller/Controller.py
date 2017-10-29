@@ -52,11 +52,15 @@ def getState(state):
     with dbm.open('../state', 'r') as db:
         if state == 'controller':
             return db.get('controller_state')
+        if state == 'quit':
+            return db.get('quit_state')
     
 def setState(state, value):
     with dbm.open('../state', 'c') as db:
         if state == 'controller':
-           db['controller_state'] = value 
+            db['controller_state'] = value 
+        if state == 'quit':
+            db['quit_state'] = value
            
 #  
 #  Konfiguration einlesen
@@ -78,7 +82,7 @@ except Exception as e:
 
 
 setState("controller", "READY")
-
+LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
 while True:
     print("WaitOnCode")
     KeyCodeController.waitOnCode(key_code, 0);     # auf (richtigen) TastenCode  warten
@@ -93,6 +97,7 @@ while True:
         
         os.system("sudo motion &")
         logging.info("motion started")
+        setState("quit", "null")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
         setState("controller", "ACTIV")
@@ -101,6 +106,7 @@ while True:
         print ("ELSE")
         os.system("sudo kill `pgrep motion`")
         logging.info("motion stoped")
+        setState("quit", "true")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
         setState("controller", "READY")
