@@ -10,15 +10,11 @@ import configparser
 import dbm
 import logging
 
-#Check ob bereits einen Alarm verarbeitet wird
-if os.path.exists("alarming.lock"):
-    if os.path.exists("detection.lock")==False:
-        os.mknod("detection.lock")
-#Neuer Alarm, da kein alarming.lock.Folgender Bereich darf nicht mehrfach ausgeführt werden
-else:
+
+
+def alarmingProcess():
     logging.basicConfig(filename='../logs/alarming.log',level=logging.DEBUG)
-    logging.info("-------Alarming process starts--------")
-    os.mknod("alarming.lock") 
+    logging.info("-------Alarming process starts--------") 
     try:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(18, GPIO.OUT)
@@ -71,7 +67,7 @@ else:
             logging.info("Alarm will be send")
             sended=send_mail(send_from, send_to, subject, text, capture_dir, max_pictures,server, port, username, password, useTLS)
             if not sended:
-                logging.warning("E-Mail was not transmitted")
+                logging.error("E-Mail was not transmitted, please check your E-Mail configuration")
             alarm_send=True
 
         time.sleep(1)
@@ -79,9 +75,9 @@ else:
 
         
         #Neue Bewegung erkannt
-        if os.path.exists("detection.lock"):
+        if getState('motion') == b'detected':
             last_detection = time.time()
-            os.remove('detection.lock')
+            setState('motion','null')
             
     GPIO.output(18, True)
     
@@ -103,7 +99,40 @@ else:
                     
 
     GPIO.cleanup() 
-    if os.path.exists("detection.lock"):
-        os.remove('detection.lock')
-    os.remove('alarming.lock')
     logging.info("-------Alarming process ends--------")
+    
+def getState(state):
+    with dbm.open('../state', 'r') as db:
+        if state=='motion':
+            return db.get('motion_state')
+        if state=='alarm':
+            return db.get('alarm_state')
+      
+    
+def setState(state, value):
+    with dbm.open('../state', 'c') as db:
+        if state=='motion':
+           db['motion_state'] = value 
+        if state=='alarm':
+           db['alarm_state'] = value 
+
+    
+#Check ob bereits eine Datenbank existiert und erstellt ggf diese
+if not os.path.exists("../state.db"):
+    with dbm.open('../state', 'c') as db:
+        db['motion_state'] = 'null'
+        db['alarm_state'] = 'done'
+
+
+
+#Alarming Prozess läuft, ein neue Bewegung wurde erkannt 
+if getState('alarm') == b'process' and getState('motion') != b'detected':
+    setState('motion', 'detected')
+
+
+#Prozess wird das erste Mal gestartet 
+if getState('alarm') != b'process':
+    setState('alarm', 'process')
+    alarmingProcess()
+    setState('alarm', 'done')
+    setState('motion', 'null')

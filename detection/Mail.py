@@ -18,7 +18,7 @@ def send_mail( send_from, send_to, subject, text, filesdir,max_pictures ,server=
     for f in os.listdir(filesdir):
         if f.endswith(".jpg"):
             if picture_counter<max_pictures:
-                print("Füge Anhang an E-Mail: "+os.path.join(filesdir, f))
+                #print("Add attachment: "+os.path.join(filesdir, f))
                 part = MIMEBase('application', "octet-stream")
                 part.set_payload( open(filesdir+f,"rb").read() )
                 encoders.encode_base64(part)
