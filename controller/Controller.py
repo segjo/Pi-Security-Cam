@@ -91,7 +91,7 @@ while True:
         time.sleep(activation_delay)
         
         
-        os.system("sudo motion -b start")
+        os.system("sudo motion &")
         logging.info("motion started")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
