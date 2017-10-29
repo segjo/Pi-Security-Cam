@@ -27,3 +27,8 @@ sudo nano /etc/motion/motion.conf
 
 line on_motion_detected /home/<username>/workspace/alarm_system/Alarming.py
 ```
+4. Set alarming configuration:
+```
+cp alarming-default.conf alarming.conf
+sudo nano alarming.conf 
+```
