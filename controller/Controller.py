@@ -60,8 +60,7 @@ try:
     key_code = config['Controller'].getint('key_code')  # TastenCode 
     activation_delay = config['Controller'].getint('activation_delay')  # Verzoegerung bis Ueberwachung (nach Aktivierung) beginnt
 except Exception as e:
-    print(e)
-    logging.error("Can't read config" + e)
+    logging.error("Can't read config" + e.__str__())
     quit()
 
 

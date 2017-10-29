@@ -73,7 +73,6 @@ def alarmingProcess():
             if not sended:
                 logging.error("E-Mail was not transmitted, please check your E-Mail configuration")
             alarm_send = True
-
         time.sleep(1)
         
         # Neue Bewegung erkannt
