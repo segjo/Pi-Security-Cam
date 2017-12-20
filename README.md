@@ -24,6 +24,6 @@ sudo mv ~/Pi-Security-Cam/motion/motion.conf /etc/motion/
 When a different user than pi, change path in motion
 ```
 sudo nano /etc/motion/motion.conf 
-```
-line on_motion_detected /home/<username>/workspace/alarm_system/Alarming.py
 
+line on_motion_detected /home/<username>/workspace/alarm_system/Alarming.py
+```
