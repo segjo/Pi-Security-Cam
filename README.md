@@ -21,7 +21,7 @@ git clone https://github.com/segjo/Pi-Security-Cam.git
 sudo mv /etc/motion.conf /etc/motion/motion.conf.back
 sudo mv ~/Pi-Security-Cam/motion/motion.conf /etc/motion/
 ```
-When a different user than pi, change path in motion
+When a different user than pi, change path in motion config
 ```
 sudo nano /etc/motion/motion.conf 
 
