@@ -32,3 +32,13 @@ line on_motion_detected /home/<username>/workspace/alarm_system/Alarming.py
 cp alarming-default.conf alarming.conf
 nano alarming.conf 
 ```
+
+5. Autostart
+```
+sudo nano /etc/rc.local 
+```
+add this two lines above ```exit 0```
+
+```cd /home/pi/Pi-Security-Cam/controller/```
+
+```./Controller.py```
