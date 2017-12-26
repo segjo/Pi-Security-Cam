@@ -4,28 +4,8 @@ from RPi import GPIO
 import time, signal
 from threading import Timer
 import os
-
-
-
-
-# ************************************************
-#  ************************************************
-#  **                                            **
-#  **                                            **
-#  **  NOCH in Arbeit....  !!!                   **
-#  **                                            **
-#  **                                            **
-#  ************************************************
-#  ************************************************
-
-
-
-
-# Konstanten
-KEY_1 = 19
-KEY_2 = 20
-KEY_3 = 21
-
+import logging
+import configparser
 
 
 def handler(signum, frame):
@@ -35,6 +15,7 @@ def handler(signum, frame):
 
 
 def waitOnCode(keycode, timeout):
+
     return waitOnCodePolling(keycode, timeout)
     
     #print("waitOnCode: " + keycode.__str__())
@@ -60,13 +41,26 @@ def waitOnCode(keycode, timeout):
 
 
 def waitOnCodePolling(keycode, timeout):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(KEY_1, GPIO.IN)
-    GPIO.setup(KEY_2, GPIO.IN)
-    GPIO.setup(KEY_3, GPIO.IN)
-
+    # Lese Konfiguration
+    config = configparser.ConfigParser()
+    config.sections()
+    try:
+        config.read('../alarming.conf')
+        config.sections()
+        key_1 = config['GPIO'].getint('button_1')
+        key_2 = config['GPIO'].getint('button_2')
+        key_3 = config['GPIO'].getint('button_3')
+    except:
+        logging.error("Can't read config")
+        quit()
     
-    key_list = [KEY_1, KEY_2, KEY_3]
+    key_list = [key_1, key_2, key_3]
+
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(key_1, GPIO.IN)
+    GPIO.setup(key_2, GPIO.IN)
+    GPIO.setup(key_3, GPIO.IN)
+
     
     print("Wait on Code Polling....")
     

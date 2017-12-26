@@ -6,36 +6,17 @@ from RPi import GPIO
 import time
 import datetime
 import os
-
-
-# ************************************************
-#  ************************************************
-#  **                                            **
-#  **                                            **
-#  **  NOCH in Arbeit....  !!!                   **
-#  **                                            **
-#  **                                            **
-#  ************************************************
-#  ************************************************
-
-
+import logging
+import configparser
 
 
 
 # Konstanten
-RED = 64
-GREEN = 32
-BLUE = 16
-
 ON = 0    
 OFF = 1
-BLINK = 4
-
-LED_RED=18
-LED_GREEN=25
-LED_BLUE=23
 
 def init():
+    # GPIOs initialieren  
     GPIO.setmode(GPIO.BCM)
 
 def cleanup():
@@ -46,25 +27,30 @@ def setLEDs_RedGreenBlue(red, green, blue):
     # pro Argument Farbe und Status kombiniert (z.B. 38 = GREEN | BLINKING: grüne LED blinkt)
     #  oder fixe Anzahl Argumente und nur on/off
     
-    init();
+    init()
+    
+    # Lese Konfiguration
+    config = configparser.ConfigParser()
+    config.sections()
+    try:
+        config.read('../alarming.conf')
+        config.sections()
+        led_red = config['GPIO'].getint('led_red')
+        led_green = config['GPIO'].getint('led_green')
+        led_blue = config['GPIO'].getint('led_blue')
+    except:
+        logging.error("Can't read config")
+        quit()
+    
     GPIO.setwarnings(False)             #  da Channels bereits in use...
-    GPIO.setup(LED_RED, GPIO.OUT)
-    if red == BLINK:
-        GPIO.output(LED_RED, 1)   # !! AENDERN auf Blinken...!!
-    else:
-        GPIO.output(LED_RED, red) 
+    GPIO.setup(led_red, GPIO.OUT)
+    GPIO.output(led_red, red) 
     
-    GPIO.setup(LED_GREEN, GPIO.OUT)
-    if green == BLINK:
-        GPIO.output(LED_GREEN, 1)   # !! AENDERN auf Blinken...!!
-    else:
-        GPIO.output(LED_GREEN, green)
+    GPIO.setup(led_green, GPIO.OUT)
+    GPIO.output(led_green, green)
     
-    GPIO.setup(LED_BLUE, GPIO.OUT)
-    if blue == BLINK:
-        GPIO.output(LED_BLUE, 1)   # !! AENDERN auf Blinken...!!
-    else:
-        GPIO.output(LED_BLUE, blue)
+    GPIO.setup(led_blue, GPIO.OUT)
+    GPIO.output(led_blue, blue)
 
 
 if __name__ == '__main__':
