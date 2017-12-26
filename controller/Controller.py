@@ -55,7 +55,7 @@ logging.info("-------Controller starts--------")
 config = configparser.ConfigParser()
 config.sections()
 try:
-    config.read('../controller.conf')
+    config.read('../alarming.conf')
     config.sections()
     key_code = config['Controller'].getint('key_code')  # TastenCode 
     activation_delay = config['Controller'].getint('activation_delay')  # Verzoegerung bis Ueberwachung (nach Aktivierung) beginnt
