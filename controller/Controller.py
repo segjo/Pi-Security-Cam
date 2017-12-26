@@ -91,10 +91,11 @@ while True:
     if getState('controller') == b'READY':
         print ("im READY")
         ###LedController.setLEDs(LedController.GREEN, LedController.BLUE_BLINKING);
-        for i in range (0, 3 * activation_delay): 
-            LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
-            time.sleep(0.333)
+        for i in range (0, 4 * activation_delay): 
             LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
+            time.sleep(0.25)
+            LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
+            time.sleep(0.25)
         
         os.system("sudo motion &")
         logging.info("motion started")
