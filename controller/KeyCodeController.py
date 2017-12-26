@@ -87,7 +87,7 @@ def waitOnCodePolling(keycode, timeout):
     #
     
     print("CodeString: " + CodeString)
-    while time.time() - start < timeout:
+    while (timeout == 0) or (time.time() - start < timeout):
 
         for ix in range(len(key_list)):
             if not GPIO.input(key_list[ix]): # and btnReleased_list[ix]:
