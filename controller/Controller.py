@@ -95,15 +95,15 @@ while True:
         logging.info("motion started")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
-        StateManager.setState(StateManager.ACTIV)
+        setState("controller", "ACTIV")
         
     else:   # ACTIV or ALARM
         print ("ELSE")
         os.system("sudo kill `pgrep motion`")
         logging.info("motion stoped")
         
-        LedController.setLEDs_RedGreenBlue(off, on, off)
-        StateManger.setState(StateMagager.READY)
+        LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
+        setState("controller", "READY")
         
         
         
