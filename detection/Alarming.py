@@ -14,13 +14,7 @@ import logging
 def alarmingProcess():
     logging.basicConfig(filename='../logs/alarming.log', level=logging.DEBUG)
     logging.info("-------Alarming process starts--------") 
-    try:
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(18, GPIO.OUT)
-        GPIO.setwarnings(False)
-    except:
-        logging.error("some troubles with GPIO's")
-        quit()
+
     
     # Lese Konfigurationen
     config = configparser.ConfigParser()
@@ -42,8 +36,19 @@ def alarmingProcess():
         send_to = config['E-Mail']['send_to']
         subject = config['E-Mail']['subject']
         max_pictures = config['E-Mail'].getint('max_pictures')
+        
+        led_red = config['GPIO'].getint('led_red')
+        
     except:
         logging.error("Can't read config")
+        quit()
+        
+    try:
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(led_red, GPIO.OUT)
+        GPIO.setwarnings(False)
+    except:
+        logging.error("some troubles with GPIO's")
         quit()
         
     text = "Hallo \nUm " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " wurde eine Bewegung erkannt. Die Aufnahmen sind im Anhang zu finden. \nGrüsse Pi Überwachungskamera"
