@@ -63,7 +63,7 @@ except Exception as e:
 setState("controller", "READY")
 LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
 while True:
-    logging("Controller: wait on correct Key-Code")
+    logging.info("Controller: wait on correct Key-Code")
     KeyCodeController.waitOnCode(key_code, None);     # auf (richtigen) TastenCode  warten  (ohne Timeout)
     
     if getState('controller') == b'READY':

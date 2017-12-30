@@ -66,7 +66,7 @@ def waitOnCode(keycode, timeout):
                         
                         if len(CodeString) == keyCodeLen:
                             if CodeString == keycode.__str__():
-                                logging("KeyCodeLController: correct key-code entered")
+                                logging.info("KeyCodeLController: correct key-code entered")
                                 GPIO.cleanup() 
                                 return True
                         
