@@ -8,39 +8,8 @@ import logging
 import configparser
 
 
-def handler(signum, frame):
-    print('Signal handler called with signal' +  signum.__str__())
-    print ("Timeout fuer TastenCode eingabe abgelaufen")
-    raise Exception('NO_KEYCODE')
-
 
 def waitOnCode(keycode, timeout):
-
-    return waitOnCodePolling(keycode, timeout)
-    
-    #print("waitOnCode: " + keycode.__str__())
-    #print("codeLength: " + len(keycode.__str_()))
-          
-    #if timeout > 0: 
-    #    # Set the signal handler and a 5-second alarm
-    #    signal.signal(signal.SIGALRM, handler)
-    #    signal.alarm(timeout)        # (maximal solage auf Timeout warten....)
-
-    ## jetzt auf gültigen Code oder Timeoutwarten
-    #try:
-    #    retCode = waitOnCodePolling(keycode, timeout)
-    #    print("alles OK: " + ex)
-    #    print("Code OK: " + retVal.__str__())
-    #except Excepiton(ex):
-    #    print("Exception: " + ex)
-    #    print("Timeout")
-    #finally:
-    #    if timeout > 0:
-    #       signal.alarm(0)    # Disable the alarm
-          
-
-
-def waitOnCodePolling(keycode, timeout):
     # Lese Konfiguration
     config = configparser.ConfigParser()
     config.sections()
@@ -62,34 +31,33 @@ def waitOnCodePolling(keycode, timeout):
     GPIO.setup(key_3, GPIO.IN)
 
     
-    print("Wait on Code Polling....")
+    logging.info("KeyCodeController: wait on key-code (polling)")
     
     start = time.time()
-    print("start" + start.__str__())
-    print("diff" + (time.time() - start).__str__() )
     
     CodeString = "";
-
     keyCodeLen = len(keycode.__str__())
     
         
     #
-    # Maximal n (=Code-Laenge) Tasten abfragen
-    #    bei falscher Taste wir wieder neu begonnen
-    #    (Falsch-Eingaben werden ignoriert)
+    # Solange warten, bis die zuletzt eingegebnen Tasten dem Key-Code entsprechen oder
+    # bis der (optionale) Timeout abläuft
+    # (bisher eingegebener Code-String wird fortlaufend auf die maximale Key-Laenge gekuerzt)
     #
     #
     
-    print("CodeString: " + CodeString)
-    while (timeout == 0) or (time.time() - start < timeout):
+    while (timeout is None) or (time.time() - start < timeout):
 
         for ix in range(len(key_list)):
             if not GPIO.input(key_list[ix]): # and btnReleased_list[ix]:
-                print("Taster " + (ix + 1).__str__() + " gedrueckt")
+                if __name__ == '__main__':
+                    # im TEST-Modus eingegebene Tasten/Tastencode fortlaufend anzeigen
+                    print("Taster " + (ix + 1).__str__() + " gedrueckt")
             
                 # warten bis taste xy wider losgelassen wird
-                while(1):
-                    if GPIO.input(key_list[ix]):
+                while(True):
+                    if __name__ == '__main__':
+                        # im TEST-Modus eingegebene Tasten/Tastencode fortlaufend anzeigen
                         print("Taster " + (ix +1).__str__() + " losgelassen")
                 
                         CodeString = CodeString + (ix + 1).__str__()
@@ -98,36 +66,29 @@ def waitOnCodePolling(keycode, timeout):
                         
                         if len(CodeString) == keyCodeLen:
                             if CodeString == keycode.__str__():
-                                print("KeyCode korrekt! (keyCode: " + keycode.__str__() + ")")
+                                logging("KeyCodeLController: correct key-code entered")
                                 GPIO.cleanup() 
                                 return True
                         
-                        print("CodeString: " + CodeString)
-                        
-                        
+                        if __name__ == '__main__':
+                            # im TEST-Modus eingegebene Tasten/Tastencode fortlaufend anzeigen
+                            print("CodeString: " + CodeString)
+                                                
                         break
             
         time.sleep(0.01)
-
-        #print("CodeString ------: " + CodeString)    
     
-    print("Timeout abgelaufen")
+    logging.info("KeyCodeController: Timeout abgelaufen")
     GPIO.cleanup() 
     return False;        
 
 
 
 if __name__ == '__main__':
-    # zum Testen
     #
-    #try:
-    #    signal.signal(signal.SIGALRM, handler)
-    #    signal.alarm(120)
-    #    waitOnCodePolling(123123, 300)
-    #except Exception(exc):
-    #         print("Exception: " + exc.__str__())
-    #         signal.alarm(0)          # Disable the alarm
-
+    # Nur zum Testen (KeyCodeCotroller direkt gestartet und nicht als Modul/Funktion verwendet)
+    #
+    print("Warte 20 Sekunden bzw. bis Code 123321 eingegeben wurde")
     if waitOnCode(123321, 20):
         print("richtiger Code wurde eingegeben")
     else:

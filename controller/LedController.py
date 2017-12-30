@@ -20,13 +20,15 @@ def init():
     GPIO.setmode(GPIO.BCM)
 
 def cleanup():
+    # GPIOs aufraeumen
     GPIO.cleanup()
 
 def setLEDs_RedGreenBlue(red, green, blue):
-    # mehrere Argumente möglich
-    # pro Argument Farbe und Status kombiniert (z.B. 38 = GREEN | BLINKING: grüne LED blinkt)
-    #  oder fixe Anzahl Argumente und nur on/off
+    #
+    # pro LED wird kann gewünschte Zustand (ON / OFF / None) mitgegeben 
+    # (bei None bleibt der Zustand der entstrechenden LED wie er ist)
     
+    logging("LedController: setLEDs_RedGreenBlue(" + red + ", " + green + ", " + blue + ")")
     init()
     
     # Lese Konfiguration
@@ -42,26 +44,34 @@ def setLEDs_RedGreenBlue(red, green, blue):
         logging.error("Can't read config")
         quit()
     
-    GPIO.setwarnings(False)             #  da Channels bereits in use...
-    GPIO.setup(led_red, GPIO.OUT)
-    GPIO.output(led_red, red) 
+    GPIO.setwarnings(False)             #  da Channels bereits "in use" sein kann
+
+    if red is not None:
+        GPIO.setup(led_red, GPIO.OUT)
+        GPIO.output(led_red, red) 
     
-    GPIO.setup(led_green, GPIO.OUT)
-    GPIO.output(led_green, green)
+    if green is not None:
+        GPIO.setup(led_green, GPIO.OUT)
+        GPIO.output(led_green, green)
     
-    GPIO.setup(led_blue, GPIO.OUT)
-    GPIO.output(led_blue, blue)
+    if blue is not None:
+        GPIO.setup(led_blue, GPIO.OUT)
+        GPIO.output(led_blue, blue)
 
 
 if __name__ == '__main__':
-    # Testcode wenn Programm nicht als Modul ausgeführt wird
+    #
+    # Nur zum Testen (LedController direkt gestartet und nicht als Modul/Funktion verwendet)
     #
     init()
     print("alle LEDs aus")
     setLEDs_RedGreenBlue(OFF, OFF, OFF)
-    time.sleep(2)
+    time.sleep(0.5)
     print("alle LEDs an")
     setLEDs_RedGreenBlue(ON, ON, ON)
+    time.sleep(2)
+    print("gruene LED aus")
+    setLEDs_RedGreenBlue(None, OFF, None)
     time.sleep(2)
     print("aus und Ende")
     setLEDs_RedGreenBlue(OFF, OFF, OFF)

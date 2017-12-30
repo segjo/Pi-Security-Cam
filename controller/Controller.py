@@ -16,19 +16,15 @@ import LedController
 
 #
 # Wartet auf in einem Enlosloop auf einen gueltigen Tatencode.
-# Je nach Status wird entsprchend reagiert:
+# Je nach Status wird entsprechend reagiert:
 #    
-# READY: Ueberwachung starten (Verzoegerung); Status -> ACTIV 
-# ACTIC: Ueberwachung deaktivieren; Status -> READY
+# READY: Ueberwachung (mit Verzoegerung) starten; Status -> ACTIV 
+# ACTIV: Ueberwachung deaktivieren; Status -> READY
 # ALARM: Ueberwachung dekativierung; (Alarming-Prozess wird abgebrochen); Status -> READY
 #        
 #    (Alarmierings-Prozzess laeuft in unbhaengigem Prozess: Effektiv alarmiert wird, wenn
 #     der Status (ALARM) nicht innerhalb von einer gewissen Zeit auf READY geaendert wird)
 
-#
-#    Asynchrone Prozess..... ..
-#      StateManager....
-# 
 
 logging.basicConfig(filename='../logs/controller.log', level=logging.DEBUG)
 logging.info("-------Controller starts--------") 
@@ -58,38 +54,36 @@ try:
     key_code = config['Controller'].getint('key_code')  # TastenCode 
     activation_delay = config['Controller'].getint('activation_delay')  # Verzoegerung bis Ueberwachung (nach Aktivierung) beginnt
 except Exception as e:
-    print(e)
-    logging.error("Can't read config" + e.__str__())
+    logging.error("Controller: Can't read config" + e.__str__())
     quit()
 
-
-
+#
+# 
+#
 setState("controller", "READY")
 LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
 while True:
-    print("WaitOnCode")
-    KeyCodeController.waitOnCode(key_code, 0);     # auf (richtigen) TastenCode  warten
+    logging("Controller: wait on correct Key-Code")
+    KeyCodeController.waitOnCode(key_code, None);     # auf (richtigen) TastenCode  warten  (ohne Timeout)
     
     if getState('controller') == b'READY':
-        print ("im READY")
-        ###LedController.setLEDs(LedController.GREEN, LedController.BLUE_BLINKING);
-        for i in range (0, 4 * activation_delay): 
+        logging.info("controller: start surveillance in " + activation_delay + " seconds")
+        for i in range (0, 2 * activation_delay): 
             LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
             time.sleep(0.25)
             LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
             time.sleep(0.25)
         
         os.system("sudo motion &")
-        logging.info("motion started")
+        logging.info("controller: motion started")
         setState("quit", "null")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
         setState("controller", "ACTIV")
-        
     else:   # ACTIV or ALARM
-        print ("ELSE")
+        logging.info("controller: deactivate surveillance/alarming")
         os.system("sudo kill `pgrep motion`")
-        logging.info("motion stoped")
+        logging.info("controller motion stopped")
         setState("quit", "true")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
