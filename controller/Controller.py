@@ -27,7 +27,7 @@ import LedController
 
 
 logging.basicConfig(filename='../logs/controller.log', level=logging.DEBUG)
-logging.info("-------Controller starts--------") 
+logging.info("-------Controller starts at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+ "--------") 
 
 def getState(state):
     with dbm.open('../state', 'r') as db:
@@ -63,7 +63,7 @@ except Exception as e:
 setState("controller", "READY")
 LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)
 while True:
-    logging.info("Controller: wait on correct Key-Code")
+    logging.info("Controller: wait on correct Key-Code at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     KeyCodeController.waitOnCode(key_code, None);     # auf (richtigen) TastenCode  warten  (ohne Timeout)
     
     if getState('controller') == b'READY':
@@ -75,7 +75,7 @@ while True:
             time.sleep(0.25)
         
         os.system("sudo motion &")
-        logging.info("controller: motion started")
+        logging.info("controller: motion started at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         setState("quit", "null")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
@@ -83,7 +83,7 @@ while True:
     else:   # ACTIV or ALARM
         logging.info("controller: deactivate surveillance/alarming")
         os.system("sudo kill `pgrep motion`")
-        logging.info("controller motion stopped")
+        logging.info("controller: motion stopped at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         setState("quit", "true")
         
         LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.OFF)

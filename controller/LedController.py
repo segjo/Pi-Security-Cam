@@ -28,7 +28,7 @@ def setLEDs_RedGreenBlue(red, green, blue):
     # pro LED wird kann gewünschte Zustand (ON / OFF / None) mitgegeben 
     # (bei None bleibt der Zustand der entstrechenden LED wie er ist)
     
-    logging.info("LedController: setLEDs_RedGreenBlue(" + red.__str__() + ", " + green.__str__() + ", " + blue.__str__() + ")")
+    logging.info("LedController: setLEDs_RedGreenBlue(" + red.__str__() + ", " + green.__str__() + ", " + blue.__str__() + ") at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     init()
     
     # Lese Konfiguration

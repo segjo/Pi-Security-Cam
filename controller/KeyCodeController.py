@@ -4,6 +4,7 @@ from RPi import GPIO
 import time, signal
 from threading import Timer
 import os
+import datetime
 import logging
 import configparser
 
@@ -31,7 +32,7 @@ def waitOnCode(keycode, timeout):
     GPIO.setup(key_3, GPIO.IN)
 
     
-    logging.info("KeyCodeController: wait on key-code (polling)")
+    logging.info("KeyCodeController: wait on key-code (polling) at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     
     start = time.time()
     
@@ -67,7 +68,7 @@ def waitOnCode(keycode, timeout):
                         
                         if len(CodeString) == keyCodeLen:
                             if CodeString == keycode.__str__():
-                                logging.info("KeyCodeLController: correct key-code entered")
+                                logging.info("KeyCodeLController: correct key-code entered at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
                                 GPIO.cleanup() 
                                 return True
                         
@@ -79,7 +80,7 @@ def waitOnCode(keycode, timeout):
             
         time.sleep(0.01)
     
-    logging.info("KeyCodeController: Timeout abgelaufen")
+    logging.info("KeyCodeController: Timeout occured at " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     GPIO.cleanup() 
     return False;        
 
