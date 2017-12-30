@@ -54,7 +54,7 @@ def alarmingProcess():
     text = "Hallo \nUm " + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " wurde eine Bewegung erkannt. Die Aufnahmen sind im Anhang zu finden. \nGrüsse Pi Überwachungskamera"
     
     # Schalte Rote LED ein
-    GPIO.output(18, False)
+    GPIO.output(led_red, False)
     alarm_send = False
     startTime = time.time()
     last_detection = startTime
@@ -85,7 +85,7 @@ def alarmingProcess():
             last_detection = time.time()
             setState('motion', 'null')
             
-    GPIO.output(18, True)
+    GPIO.output(led_red, True)
     
     # Aufnahmen archivieren 
     for f in os.listdir(capture_dir):
