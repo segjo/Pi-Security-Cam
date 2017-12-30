@@ -55,10 +55,11 @@ def waitOnCode(keycode, timeout):
                     print("Taster " + (ix + 1).__str__() + " gedrueckt")
             
                 # warten bis taste xy wider losgelassen wird
-                while(True):
-                    if __name__ == '__main__':
-                        # im TEST-Modus eingegebene Tasten/Tastencode fortlaufend anzeigen
-                        print("Taster " + (ix +1).__str__() + " losgelassen")
+                while(1):
+                    if GPIO.input(key_list[ix]):
+                        if __name__ == '__main__':
+                            # im TEST-Modus eingegebene Tasten/Tastencode fortlaufend anzeigen
+                            print("Taster " + (ix +1).__str__() + " losgelassen")
                 
                         CodeString = CodeString + (ix + 1).__str__()
                         if len(CodeString) > keyCodeLen:

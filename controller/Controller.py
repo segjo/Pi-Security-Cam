@@ -67,7 +67,7 @@ while True:
     KeyCodeController.waitOnCode(key_code, None);     # auf (richtigen) TastenCode  warten  (ohne Timeout)
     
     if getState('controller') == b'READY':
-        logging.info("controller: start surveillance in " + activation_delay + " seconds")
+        logging.info("controller: start surveillance in " + activation_delay.__str__() + " seconds")
         for i in range (0, 2 * activation_delay): 
             LedController.setLEDs_RedGreenBlue(LedController.OFF, LedController.ON, LedController.ON)
             time.sleep(0.25)
