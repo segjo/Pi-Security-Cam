@@ -13,7 +13,7 @@ import logging
 
 def alarmingProcess():
     logging.basicConfig(filename='../logs/alarming.log', level=logging.DEBUG)
-    logging.info("-------Alarming process starts--------") 
+    logging.info("-------Alarming process starts at "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"--------") 
 
     
     # Lese Konfigurationen
@@ -98,7 +98,7 @@ def alarmingProcess():
                 os.remove(os.path.join(capture_dir, f))
 
     GPIO.cleanup() 
-    logging.info("-------Alarming process ends--------")
+    logging.info("-------Alarming process ends at "+datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")+"--------")
 
     
 def getState(state):
