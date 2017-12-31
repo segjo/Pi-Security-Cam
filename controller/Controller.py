@@ -9,7 +9,6 @@ import os
 import configparser
 import logging
 import dbm
-import StateManager
 import KeyCodeController
 import LedController
 
